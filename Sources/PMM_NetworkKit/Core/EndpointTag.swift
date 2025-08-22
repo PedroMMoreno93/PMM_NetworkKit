@@ -12,7 +12,6 @@ public struct EndpointTag: OptionSet, Sendable, Hashable {
     public let rawValue: Int
     public init(rawValue: Int) { self.rawValue = rawValue }
     
-    
     public static let requiresAuth = EndpointTag(rawValue: 1 << 0)
     public static let skipLogging = EndpointTag(rawValue: 1 << 1)
     public static let highPriority = EndpointTag(rawValue: 1 << 2)

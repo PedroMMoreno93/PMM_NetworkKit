@@ -12,6 +12,7 @@ public enum DecodingStrategy<T> {
     case raw
     case custom((Data, HTTPURLResponse, JSONDecoder) throws -> T)
     
-    
-    public static func json() -> DecodingStrategy<T> { .json(nil) }
+    public static func json() -> DecodingStrategy<T> {
+        .json(nil)
+    }
 }

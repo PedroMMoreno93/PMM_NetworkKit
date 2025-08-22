@@ -26,6 +26,16 @@ public protocol Interceptor {
 }
 
 public extension Interceptor {
-    func prepare(_ request: URLRequest, endpoint: any Endpoint) async throws -> URLRequest { request }
-    func willSend(_ request: URLRequest, endpoint: any Endpoint) async {}
+    func prepare(
+        _ request: URLRequest,
+        endpoint: any Endpoint
+    ) async throws -> URLRequest {
+        request
+    }
+    
+    func willSend(
+        _ request: URLRequest,
+        endpoint: any Endpoint
+    ) async {
+    }
 }

@@ -17,10 +17,12 @@ public struct LoggingInterceptor: Interceptor {
     // Store start times for latency measurement
     private static let latency = LatencyStore()
     
-    public init(subsystem: String = "com.pmm.networkkit",
-                category: String = "network",
-                redactHeaders: Set<String> = ["Authorization"],
-                logResponseBody: Bool = false) {
+    public init(
+        subsystem: String = "com.pmm.networkkit",
+        category: String = "network",
+        redactHeaders: Set<String> = ["Authorization"],
+        logResponseBody: Bool = false
+    ) {
         self.logger = Logger(subsystem: subsystem, category: category)
         self.redactHeaders = redactHeaders
         self.logResponseBody = logResponseBody
@@ -30,7 +32,6 @@ public struct LoggingInterceptor: Interceptor {
     public func prepare(_ request: URLRequest, endpoint: any Endpoint) async throws -> URLRequest {
         request
     }
-    
     
     public func willSend(_ request: URLRequest, endpoint: any Endpoint) async {
         guard (endpoint.tags.contains(.skipLogging)) == false
@@ -42,13 +43,15 @@ public struct LoggingInterceptor: Interceptor {
         logger.debug("➡️ sending: \(method, privacy: .public) \(url, privacy: .public)")
         
         
-        if let headers = request.allHTTPHeaderFields, headers.isEmpty == false {
+        if let headers = request.allHTTPHeaderFields,
+            !headers.isEmpty {
             let pretty = headers.map { key, value -> String in
                 let redacted = redactHeaders.contains(key) ? "(redacted)" : value
                 return "\(key): \(redacted)"
             }.joined(separator: ", ")
             logger.debug("headers: \(pretty, privacy: .public)")
         }
+        
         if let body = request.httpBody, body.isEmpty == false {
             logger.debug("body: \("\(body.count) bytes", privacy: .public)")
         }
@@ -58,7 +61,6 @@ public struct LoggingInterceptor: Interceptor {
             await LoggingInterceptor.latency.markStart(url)
         }
     }
-    
     
     public func didReceive(
         _ result: Result<(HTTPURLResponse, Data), Error>,
@@ -89,11 +91,18 @@ public struct LoggingInterceptor: Interceptor {
         return result
     }
     
-    
-    private func prettyPrintedJSON(_ data: Data) -> String? {
+    private func prettyPrintedJSON(
+        _ data: Data
+    ) -> String? {
         do {
-            let obj = try JSONSerialization.jsonObject(with: data, options: [])
-            let prettyData = try JSONSerialization.data(withJSONObject: obj, options: [.prettyPrinted])
+            let obj = try JSONSerialization.jsonObject(
+                with: data,
+                options: []
+            )
+            let prettyData = try JSONSerialization.data(
+                withJSONObject: obj,
+                options: [.prettyPrinted]
+            )
             return String(data: prettyData, encoding: .utf8)
         } catch {
             return String(data: data, encoding: .utf8) // fallback raw

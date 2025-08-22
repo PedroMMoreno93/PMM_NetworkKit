@@ -76,3 +76,22 @@ public struct RetryInterceptor: Interceptor {
         }
     }
 }
+
+/*
+ -----------
+ | EXAMPLE |
+ -----------
+ */
+let tokenStore = TokenStore(initial: "abc.def.123") // i.e. initial token
+let retryPolicy = RetryPolicy(maxRetries: 3, baseDelay: 0.5)
+
+@MainActor
+let client = DefaultNetworkClient(
+    config: APIConfig(baseURL: URL(string: "https://api.test.com")!),
+    transport: URLSessionTransport(session: .shared), // 🚚 hace la llamada real
+    interceptors: [
+        LoggingInterceptor(logResponseBody: true),   // 🧩 loggea
+        AuthInterceptor(tokenStore: tokenStore),     // 🧩 añade Authorization
+        RetryInterceptor()                           // 🧩 reintenta si 500/timeout
+    ]
+)

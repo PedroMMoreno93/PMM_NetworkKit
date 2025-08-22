@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct RetryPolicy {
+public struct RetryPolicy: Sendable, Equatable {
     public let maxRetries: Int
     public let baseDelay: TimeInterval
     public let retryableStatusCodes: Set<Int>

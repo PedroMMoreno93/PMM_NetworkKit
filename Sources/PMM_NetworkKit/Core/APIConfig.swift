@@ -14,7 +14,7 @@ public struct APIConfig: Sendable {
     public var session: URLSession
     public var jsonDecoder: JSONDecoder
     public var jsonEncoder: JSONEncoder
-
+    
     public init(
         baseURL: URL,
         timeout: TimeInterval = 30,

@@ -8,20 +8,6 @@
 import Foundation
 import os.log
 
-actor LatencyStore {
-    private var startTimes: [URL: Date] = [:]
-
-    func markStart(_ url: URL) { startTimes[url] = Date() }
-
-    func elapsedMillis(for url: URL) -> Double? {
-        guard let start = startTimes.removeValue(forKey: url)
-        else {
-            return nil
-        }
-        return Date().timeIntervalSince(start) * 1000.0
-    }
-}
-
 public struct LoggingInterceptor: Interceptor {
     private let logger: Logger
     private let redactHeaders: Set<String>
@@ -30,7 +16,6 @@ public struct LoggingInterceptor: Interceptor {
     
     // Store start times for latency measurement
     private static let latency = LatencyStore()
-
     
     public init(subsystem: String = "com.pmm.networkkit",
                 category: String = "network",

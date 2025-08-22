@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 public enum NetworkError: Error, LocalizedError {
     case cancelled
     case noConnection

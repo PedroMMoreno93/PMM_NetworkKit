@@ -31,19 +31,16 @@ public enum PMM_NetworkKitFactory {
 
         let baseTransport = URLSessionTransport(session: session)
         
-        
-        let transport: Transport = {
-            if let policy = retryPolicy {
-                return RetryingTransport(
-                    inner: baseTransport,
-                    policy: policy,
-                    logger: Logger(subsystem: "com.pmm.networkkit", category: "retry")
-                )
-            } else {
-                return baseTransport
-            }
-        }()
+        var transport: any Transport = LoggingTransport(inner: baseTransport)
 
+        if let policy = retryPolicy {
+            transport = RetryingTransport(
+                inner: transport,
+                policy: policy,
+                logger: Logger(subsystem: "com.pmm.networkkit", category: "retry")
+            )
+        }
+        
         let interceptors: [Interceptor] = [LoggingInterceptor()] + extra
         return DefaultNetworkClient(
             config: config,

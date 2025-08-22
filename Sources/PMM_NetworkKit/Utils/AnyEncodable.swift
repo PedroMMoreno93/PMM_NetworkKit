@@ -21,12 +21,32 @@ internal struct AnyEncodable: Encodable {
     }
 }
 
-internal func dynamicJSONDecode<T>(_ type: T.Type, from data: Data, using decoder: JSONDecoder) throws -> T {
+internal func dynamicJSONDecode<T>(
+    _ type: T.Type,
+    from data: Data,
+    using decoder: JSONDecoder
+) throws -> T {
     if let decodableType = T.self as? Decodable.Type {
-        let decoded = try decoder.decode(decodableType, from: data)
-        if let typed = decoded as? T { return typed }
-        throw DecodingError.typeMismatch(T.self, .init(codingPath: [], debugDescription: "Decoded type mismatch"))
+        let decoded = try decoder.decode(
+            decodableType,
+            from: data
+        )
+        
+        if let typed = decoded as? T {
+            return typed
+        }
+        
+        throw DecodingError.typeMismatch(
+            T.self,
+            .init(
+                codingPath: [],
+                debugDescription: "Decoded type mismatch"
+            )
+        )
     } else {
-        throw DecodingError.typeMismatch(T.self, .init(codingPath: [], debugDescription: "Type does not conform to Decodable"))
+        throw DecodingError.typeMismatch(
+            T.self,
+            .init(codingPath: [], debugDescription: "Type does not conform to Decodable")
+        )
     }
 }

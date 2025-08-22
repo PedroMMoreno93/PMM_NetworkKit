@@ -7,12 +7,20 @@
 
 import Foundation
 
-actor LatencyStore {
-    private var startTimes: [URL: Date] = [:]
+public actor LatencyStore {
+    private var startTimes: [URL: Date]
 
-    func markStart(_ url: URL) { startTimes[url] = Date() }
+    public init(
+        startTimes: [URL : Date]  = [:]
+    ) {
+        self.startTimes = startTimes
+    }
+    
+    public func markStart(_ url: URL) { startTimes[url] = Date() }
 
-    func elapsedMillis(for url: URL) -> Double? {
+    public func elapsedMillis(
+        for url: URL
+    ) -> Double? {
         guard let start = startTimes.removeValue(forKey: url)
         else {
             return nil

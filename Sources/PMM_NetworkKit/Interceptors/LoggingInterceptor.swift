@@ -16,7 +16,6 @@ public struct LoggingInterceptor: Interceptor {
     
     // Store start times for latency measurement
     private static let latency = LatencyStore()
-
     
     public init(subsystem: String = "com.pmm.networkkit",
                 category: String = "network",
